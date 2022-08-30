@@ -2,7 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:stopwatch/bloc.dart';
 import 'package:stopwatch/button.dart';
+import 'package:stopwatch/clock.dart';
 import 'package:stopwatch/l10n/l10n.dart';
+import 'package:stopwatch/timerScreen.dart';
+
+enum TabItem { timer, stopwatch, clock }
+
+const Map<TabItem, String> tabName = {
+  TabItem.timer: 'timer',
+  TabItem.stopwatch: 'stopwatch',
+  TabItem.clock: 'clock',
+};
+
+const Map<TabItem, MaterialColor> activeTabColor = {
+  TabItem.timer: Colors.red,
+  TabItem.stopwatch: Colors.green,
+  TabItem.clock: Colors.blue,
+};
 
 class StopWatchTimerPage extends StatefulWidget {
   const StopWatchTimerPage({Key? key}) : super(key: key);
@@ -12,11 +28,6 @@ class StopWatchTimerPage extends StatefulWidget {
 }
 
 class _StopWatchTimerPageState extends State<StopWatchTimerPage> {
-  // static const countDownDuration = Duration(minutes: 10);
-  // Duration duration = const Duration();
-  // Timer? timer;
-  // bool countDown = true;
-
   StopWatchBloc _bloc = StopWatchBloc();
 
   @override
@@ -26,32 +37,45 @@ class _StopWatchTimerPageState extends State<StopWatchTimerPage> {
     reset();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("dispose called");
+  }
+
   void reset(){
-    if(_bloc.countDown){
-      _bloc.setDuration(_bloc.countDownDuration);
-      setState(() {
+    if(mounted) {
+      if (_bloc.countDown) {
         _bloc.setDuration(_bloc.countDownDuration);
-      });
-    }else{
-      _bloc.setDuration(const Duration());
-      setState(() {
+        setState(() {
+          _bloc.setDuration(_bloc.countDownDuration);
+        });
+      } else {
         _bloc.setDuration(const Duration());
-      });
+        setState(() {
+          _bloc.setDuration(const Duration());
+        });
+      }
     }
   }
+  
   void startTimer(){
     _bloc.setTimer(Timer.periodic(const Duration(seconds: 1), (_) => addTime()));
   }
+  
   void addTime(){
-    final addSeconds = _bloc.countDown ? -1 : 1;
-    setState(() {
-      final seconds = _bloc.duration.inSeconds+addSeconds;
-      if(seconds < 0){
-        _bloc.timer?.cancel();
-      }else{
-        _bloc.setDuration(Duration(seconds: seconds));
-      }
-    });
+    if(mounted) {
+      final addSeconds = _bloc.countDown ? -1 : 1;
+      setState(() {
+        final seconds = _bloc.duration.inSeconds + addSeconds;
+        if (seconds < 0) {
+          _bloc.timer?.cancel();
+        } else {
+          _bloc.setDuration(Duration(seconds: seconds));
+        }
+      });
+    }
   }
 
   void stopTimer({bool resets = true}){
@@ -83,8 +107,10 @@ class _StopWatchTimerPageState extends State<StopWatchTimerPage> {
         ),
       ),
     );
-
   }
+
+
+  
   Widget buildTimer(){
     String twoDigits(int n)=> n.toString().padLeft(2,'0');
     final hours = twoDigits(_bloc.duration.inHours);
