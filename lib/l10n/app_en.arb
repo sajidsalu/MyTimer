@@ -1,0 +1,9 @@
+{
+  "stopwatch": "StopWatch",
+  "hours": "HOURS",
+  "minutes": "MINUTES",
+  "seconds": "SECONDS",
+  "startTimer": "Start Timer!",
+  "cancel": "CANCEL",
+  "stop": "STOP"
+}
