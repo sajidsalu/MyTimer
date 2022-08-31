@@ -91,10 +91,6 @@ class _StopWatchTimerPageState extends State<StopWatchTimerPage> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.orange[50],
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(Localization.stopwatch),
-        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
