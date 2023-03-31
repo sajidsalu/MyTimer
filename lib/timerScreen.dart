@@ -46,7 +46,7 @@ class _TimerScreenState extends State<TimerScreen> {
                     );
                   })
                   : Text("Alert"),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Reset"),
                 onPressed: () {
                   setState(() {
